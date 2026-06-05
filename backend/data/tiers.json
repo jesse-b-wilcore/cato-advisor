@@ -1,0 +1,49 @@
+{
+  "tiers": [
+    {
+      "id": "ROUTINE",
+      "name": "Routine Recurring",
+      "color": "green",
+      "ao_action": "None",
+      "ao_action_description": "No AO notification required. Log the change and update artifact freshness tracker.",
+      "description": "Standard operational activities and vulnerability mitigation within approved baseline.",
+      "examples": ["Patching within same major version", "Standard vuln remediation", "Minor config within baseline", "Regular key rotation"],
+      "agent_actions": ["Log change", "Update artifact freshness tracker"],
+      "change_types": ["DEP_UPDATE", "CICD_CHANGE"]
+    },
+    {
+      "id": "ADAPTIVE",
+      "name": "Adaptive",
+      "color": "yellow",
+      "ao_action": "Notification required",
+      "ao_action_description": "AO must be notified. Generate SIA and Significant Change Notification.",
+      "description": "Adjustments to existing components or functionality of the system.",
+      "examples": ["Switching between approved encryption algorithms", "Adding endpoint to existing API", "Modifying existing access control rules"],
+      "agent_actions": ["Generate SIA draft", "Produce Significant Change Notification", "Flag affected SSP sections", "Update POA&M if needed"],
+      "change_types": ["AUTH_CHANGE", "ENCRYPTION_CHANGE", "DB_SCHEMA_CHANGE", "NETWORK_PORT_CHANGE", "LOGGING_CHANGE", "ACCESS_CONTROL_CHANGE", "CONTAINER_BASE_CHANGE", "SECRETS_CHANGE", "FEATURE_FLAG_CHANGE", "BACKUP_RECOVERY_CHANGE", "OS_RUNTIME_CHANGE"]
+    },
+    {
+      "id": "TRANSFORMATIVE",
+      "name": "Transformative",
+      "color": "orange",
+      "ao_action": "Approval required",
+      "ao_action_description": "AO must approve before deployment. Generate SIA, SCN, and flag for AO review.",
+      "description": "Adding, replacing, or removing major components and functionality.",
+      "examples": ["Migrating VMs to containers", "Changing identity providers", "New data center", "New third-party integration", "Significant architecture changes"],
+      "agent_actions": ["Generate SIA draft", "Produce Significant Change Notification", "Flag for AO review", "Draft SSP updates", "May require 3PAO assessment"],
+      "change_types": ["NEW_EXTERNAL_API", "INFRA_CHANGE"]
+    },
+    {
+      "id": "IMPACT_CATEGORIZATION",
+      "name": "Impact Categorization",
+      "color": "red",
+      "ao_action": "Full re-assessment required",
+      "ao_action_description": "Full re-assessment required. Escalate to ISSM immediately. Block renewal readiness until resolved.",
+      "description": "Changes likely to increase or decrease the system's impact level rating.",
+      "examples": ["System handles higher-classification data", "New PII types changing privacy posture", "Mission change altering C/I/A ratings"],
+      "agent_actions": ["Flag full reassessment required", "Generate SIA", "Escalate to ISSM immediately", "Block renewal readiness until resolved"],
+      "change_types": ["MISSION_SCOPE_CHANGE"]
+    }
+  ],
+  "tier_precedence": ["IMPACT_CATEGORIZATION", "TRANSFORMATIVE", "ADAPTIVE", "ROUTINE"]
+}

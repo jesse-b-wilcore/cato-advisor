@@ -1,0 +1,307 @@
+{
+  "code_detectable": [
+    {
+      "id": "DEP_UPDATE",
+      "name": "Dependency update",
+      "example": "Bump library in package.json, requirements.txt",
+      "detection_patterns": {
+        "file_patterns": ["package.json", "requirements.txt", "pom.xml", "go.mod", "Gemfile", "Cargo.toml", "package-lock.json", "yarn.lock", "Pipfile", "Pipfile.lock"],
+        "content_patterns": ["\"version\":", "==", ">=", "~>", "^"]
+      },
+      "tier": "Routine Recurring",
+      "artifacts": ["A11", "A30", "A38", "A41"],
+      "controls": ["CM-7", "SA-11", "SR-3"]
+    },
+    {
+      "id": "NEW_EXTERNAL_API",
+      "name": "New external API integration",
+      "example": "Adding HTTP calls to a third-party service",
+      "detection_patterns": {
+        "file_patterns": ["*.ts", "*.py", "*.js", "*.go", "*.java"],
+        "content_patterns": ["fetch(", "axios.", "requests.get", "http.NewRequest", "HttpClient", "RestTemplate", "curl"],
+        "env_var_patterns": ["API_KEY", "API_URL", "ENDPOINT", "BASE_URL", "WEBHOOK"]
+      },
+      "tier": "Transformative",
+      "artifacts": ["A2", "A11", "A32", "A33", "A48"],
+      "controls": ["CA-3", "SC-7", "SA-9"]
+    },
+    {
+      "id": "AUTH_CHANGE",
+      "name": "Authentication mechanism change",
+      "example": "Switching SAML to OIDC, adding MFA",
+      "detection_patterns": {
+        "file_patterns": ["auth*.*, *auth*.*", "*.config.js", "*.config.ts", "identity*.*, *identity*.*"],
+        "content_patterns": ["SAML", "OIDC", "OAuth", "JWT", "MFA", "2FA", "SSO", "ldap", "passport.", "authProvider", "IdentityProvider"]
+      },
+      "tier": "Adaptive",
+      "artifacts": ["A11", "A19", "A48"],
+      "controls": ["IA-2", "IA-5", "IA-8"]
+    },
+    {
+      "id": "ENCRYPTION_CHANGE",
+      "name": "Encryption change",
+      "example": "TLS version update, new algorithm",
+      "detection_patterns": {
+        "file_patterns": ["*.conf", "nginx.conf", "ssl*.*, *ssl*.*", "tls*.*, *tls*.*", "*.pem", "*.crt"],
+        "content_patterns": ["TLSv", "ssl_protocols", "cipher", "AES", "RSA", "sha256", "HTTPS", "ssl_certificate", "tls_version"]
+      },
+      "tier": "Adaptive",
+      "artifacts": ["A11", "A20", "A48"],
+      "controls": ["SC-8", "SC-12", "SC-13", "SC-28"]
+    },
+    {
+      "id": "DB_SCHEMA_CHANGE",
+      "name": "Database schema change",
+      "example": "New table storing PII, new columns",
+      "detection_patterns": {
+        "file_patterns": ["*.sql", "migrations/*", "db/migrate/*", "alembic/*", "*migration*.*", "*schema*.*"],
+        "content_patterns": ["CREATE TABLE", "ALTER TABLE", "ADD COLUMN", "migrate", "def change", "def up"]
+      },
+      "tier": "Adaptive",
+      "artifacts": ["A5", "A6", "A7", "A11"],
+      "controls": ["MP-6", "SI-12", "PT-2"]
+    },
+    {
+      "id": "NETWORK_PORT_CHANGE",
+      "name": "Network/port change",
+      "example": "New port exposed, new ingress rule",
+      "detection_patterns": {
+        "file_patterns": ["*.tf", "*.yaml", "*.yml", "Dockerfile", "docker-compose.yml", "k8s/*"],
+        "content_patterns": ["EXPOSE", "containerPort", "port:", "ingress", "LoadBalancer", "NodePort", "aws_security_group", "ingress_rule"]
+      },
+      "tier": "Adaptive",
+      "artifacts": ["A2", "A11", "A20", "A48"],
+      "controls": ["SC-7", "AC-4"]
+    },
+    {
+      "id": "LOGGING_CHANGE",
+      "name": "Logging/audit change",
+      "example": "Adding or removing audit events",
+      "detection_patterns": {
+        "file_patterns": ["*log*.*, *audit*.*", "*.conf", "log4j*.*, *logger*.*"],
+        "content_patterns": ["audit_log", "access_log", "logger.", "logging.", "winston.", "bunyan", "CloudTrail", "audit_event", "log_level"]
+      },
+      "tier": "Adaptive",
+      "artifacts": ["A11", "A18", "A48"],
+      "controls": ["AU-2", "AU-3", "AU-6", "AU-12"]
+    },
+    {
+      "id": "ACCESS_CONTROL_CHANGE",
+      "name": "Access control change",
+      "example": "New role, changed permission, RBAC policy",
+      "detection_patterns": {
+        "file_patterns": ["*role*.*, *permission*.*, *policy*.*", "iam*.*, *iam*.*", "rbac*.*"],
+        "content_patterns": ["Role", "Permission", "Policy", "allow", "deny", "IAMRole", "aws_iam_role", "RoleBinding", "ClusterRole", "RBAC"]
+      },
+      "tier": "Adaptive",
+      "artifacts": ["A11", "A17", "A48"],
+      "controls": ["AC-2", "AC-3", "AC-6"]
+    },
+    {
+      "id": "CONTAINER_BASE_CHANGE",
+      "name": "Container/image base change",
+      "example": "New base image in Dockerfile",
+      "detection_patterns": {
+        "file_patterns": ["Dockerfile", "Dockerfile.*", "*.dockerfile"],
+        "content_patterns": ["FROM "]
+      },
+      "tier": "Adaptive",
+      "artifacts": ["A11", "A36", "A50"],
+      "controls": ["CM-2", "CM-7", "SI-2"]
+    },
+    {
+      "id": "INFRA_CHANGE",
+      "name": "Infrastructure change",
+      "example": "New server, region, or cloud service",
+      "detection_patterns": {
+        "file_patterns": ["*.tf", "*.tfvars", "cloudformation*.*, *cloudformation*.*", "*.yaml", "*.yml"],
+        "content_patterns": ["resource \"aws_", "resource \"google_", "resource \"azurerm_", "AWSTemplateFormatVersion", "aws_region", "availability_zone"]
+      },
+      "tier": "Transformative",
+      "artifacts": ["A2", "A11", "A23", "A48"],
+      "controls": ["CM-2", "CM-6", "SC-7", "AC-4", "AU-2"]
+    },
+    {
+      "id": "CICD_CHANGE",
+      "name": "CI/CD pipeline change",
+      "example": "Modified build, test, or deploy pipeline",
+      "detection_patterns": {
+        "file_patterns": [".github/workflows/*.yml", ".gitlab-ci.yml", "Jenkinsfile", ".circleci/config.yml", "azure-pipelines.yml", ".travis.yml"],
+        "content_patterns": ["jobs:", "steps:", "pipeline", "stage:", "deploy"]
+      },
+      "tier": "Routine Recurring",
+      "artifacts": ["A12", "A11"],
+      "controls": ["CM-3", "SA-10", "SA-11"]
+    },
+    {
+      "id": "SECRETS_CHANGE",
+      "name": "Secrets management change",
+      "example": "New vault path, rotated key reference",
+      "detection_patterns": {
+        "file_patterns": ["*secret*.*, *vault*.*, *credential*.*", "*.env", ".env.*"],
+        "content_patterns": ["secretsmanager", "vault.", "aws_secretsmanager", "Secret", "getSecret", "VAULT_ADDR", "secret_key", "private_key"]
+      },
+      "tier": "Adaptive",
+      "artifacts": ["A11", "A48"],
+      "controls": ["SC-12", "IA-5"]
+    },
+    {
+      "id": "FEATURE_FLAG_CHANGE",
+      "name": "Feature flag / config toggle",
+      "example": "Enabling major feature for production",
+      "detection_patterns": {
+        "file_patterns": ["*feature*.*, *flag*.*, *toggle*.*", "config/*.*, *config*.*"],
+        "content_patterns": ["feature_flag", "featureFlag", "isEnabled", "FEATURE_", "LaunchDarkly", "unleash", "flipper"]
+      },
+      "tier": "Adaptive",
+      "artifacts": ["A11", "A12", "A48"],
+      "controls": ["CM-3", "CM-4"]
+    },
+    {
+      "id": "BACKUP_RECOVERY_CHANGE",
+      "name": "Backup/recovery change",
+      "example": "Modified backup schedule or retention",
+      "detection_patterns": {
+        "file_patterns": ["*backup*.*, *recovery*.*, *restore*.*"],
+        "content_patterns": ["backup", "retention", "snapshot", "aws_backup", "rpo", "rto", "cron", "schedule"]
+      },
+      "tier": "Adaptive",
+      "artifacts": ["A13", "A11"],
+      "controls": ["CP-9", "CP-10"]
+    },
+    {
+      "id": "OS_RUNTIME_CHANGE",
+      "name": "OS / runtime change",
+      "example": "Ubuntu 22→24, Node 18→20",
+      "detection_patterns": {
+        "file_patterns": ["Dockerfile", "*.tf", "*.yml", ".tool-versions", ".nvmrc", ".python-version"],
+        "content_patterns": ["ubuntu:", "node:", "python:", "ruby:", "java:", "ami-", "runtime:", "engine:"]
+      },
+      "tier": "Adaptive",
+      "artifacts": ["A11", "A36", "A50"],
+      "controls": ["CM-2", "SI-2"]
+    }
+  ],
+  "manual": [
+    {
+      "id": "ORG_CHANGE",
+      "name": "Organizational change",
+      "example": "New ISSO, System Owner, or AO",
+      "why_not_code": "Personnel changes happen outside code",
+      "artifacts": ["A3", "A11", "A40"],
+      "controls": ["All POC sections"],
+      "intake_method": "Manual form",
+      "form_fields": ["role_changed", "old_holder", "new_holder", "effective_date", "affected_systems"]
+    },
+    {
+      "id": "POLICY_UPDATE",
+      "name": "Policy update",
+      "example": "Agency updates access control policy",
+      "why_not_code": "Policy docs are human-authored",
+      "artifacts": ["A17", "A18", "A19", "A20", "A21", "A22", "A23", "A24", "A25", "A26", "A27", "A28", "A29", "A11"],
+      "controls": ["All control families"],
+      "intake_method": "Manual form",
+      "form_fields": ["policy_name", "version", "summary_of_changes", "affected_control_families", "effective_date"]
+    },
+    {
+      "id": "PHYSICAL_SECURITY_CHANGE",
+      "name": "Physical security change",
+      "example": "Data center move, new facility controls",
+      "why_not_code": "Physical world, not code",
+      "artifacts": ["A23", "A11", "A2"],
+      "controls": ["PE family"],
+      "intake_method": "Manual form",
+      "form_fields": ["facility", "change_description", "inherited_controls_affected"]
+    },
+    {
+      "id": "MISSION_SCOPE_CHANGE",
+      "name": "Mission / scope change",
+      "example": "System handles new data classification",
+      "why_not_code": "Business decision",
+      "artifacts": ["A1", "A5", "A6", "A7", "A11"],
+      "controls": ["Multiple families"],
+      "intake_method": "Manual form with guided questionnaire",
+      "form_fields": ["old_scope", "new_scope", "new_data_types", "confidentiality_impact", "integrity_impact", "availability_impact"]
+    },
+    {
+      "id": "VENDOR_CHANGE",
+      "name": "Vendor / supplier change",
+      "example": "Switched cloud sub-processor",
+      "why_not_code": "Contract/procurement, not code",
+      "artifacts": ["A10", "A30", "A32", "A33"],
+      "controls": ["SA-9", "SR family"],
+      "intake_method": "Manual form",
+      "form_fields": ["old_vendor", "new_vendor", "services_affected", "data_handling_changes"]
+    },
+    {
+      "id": "PERSONNEL_SECURITY_EVENT",
+      "name": "Personnel security event",
+      "example": "Employee termination, clearance change",
+      "why_not_code": "HR system, not code",
+      "artifacts": ["A24", "A11"],
+      "controls": ["PS family"],
+      "intake_method": "Manual form",
+      "form_fields": ["event_type", "employee_role", "effective_date", "access_revoked", "systems_affected"]
+    },
+    {
+      "id": "NEW_INTERCONNECTION",
+      "name": "New interconnection (non-API)",
+      "example": "System-to-system agreement, manual handshake",
+      "why_not_code": "Negotiated outside codebase",
+      "artifacts": ["A32", "A33", "A2"],
+      "controls": ["CA-3", "SC-7"],
+      "intake_method": "Manual form",
+      "form_fields": ["system_name", "owning_org", "agreement_type", "data_shared", "connection_type"]
+    },
+    {
+      "id": "COMPLIANCE_FRAMEWORK_CHANGE",
+      "name": "Compliance framework change",
+      "example": "NIST releases 800-53 Rev 5.2.0",
+      "why_not_code": "External regulatory action",
+      "artifacts": ["A8", "A11", "A9"],
+      "controls": ["All controls potentially"],
+      "intake_method": "Manual form",
+      "form_fields": ["framework", "old_version", "new_version", "effective_date", "impacted_controls"]
+    },
+    {
+      "id": "TRAINING_COMPLETION",
+      "name": "Training completion",
+      "example": "Annual security awareness training",
+      "why_not_code": "LMS / HR system",
+      "artifacts": ["A11"],
+      "controls": ["AT-2", "AT-3"],
+      "intake_method": "Manual form",
+      "form_fields": ["training_name", "completion_date", "completion_percentage", "next_due_date"]
+    },
+    {
+      "id": "CP_TEST",
+      "name": "Contingency plan test",
+      "example": "Annual DR test completed",
+      "why_not_code": "Manual event, human-authored results",
+      "artifacts": ["A14", "A41"],
+      "controls": ["CP-4"],
+      "intake_method": "Manual form",
+      "form_fields": ["test_date", "test_type", "participants", "outcome", "findings", "next_test_date"]
+    },
+    {
+      "id": "IR_TEST",
+      "name": "Incident response test",
+      "example": "Tabletop exercise completed",
+      "why_not_code": "Manual event",
+      "artifacts": ["A16", "A41"],
+      "controls": ["IR-3"],
+      "intake_method": "Manual form",
+      "form_fields": ["exercise_date", "exercise_type", "participants", "scenario", "findings", "next_exercise_date"]
+    },
+    {
+      "id": "RISK_ACCEPTANCE",
+      "name": "Risk acceptance decision",
+      "example": "AO accepts a residual risk",
+      "why_not_code": "Human judgment",
+      "artifacts": ["A43", "A41", "A39"],
+      "controls": ["CA-6"],
+      "intake_method": "Manual form",
+      "form_fields": ["risk_description", "risk_level", "affected_controls", "ao_name", "acceptance_date", "expiration_date", "conditions"]
+    }
+  ]
+}
